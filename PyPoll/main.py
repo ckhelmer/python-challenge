@@ -12,54 +12,64 @@ with open(csvpath, newline= "") as csvfile:
     next(csvreader, None)  # skip the headers
     
     candidates = []
-    VoteCounts = []
-    voters = 0
-    candidatecount = 0
     candidate_dictionary = {}
+    percentage_dictionary = {}
+    voters = 0
+    winner = ""
+    compare = 0
     
     for row in csvreader:
         
+         
         #Total number of votes cast
         voters = voters + 1
         
         #Complete list of candidates who received votes
         #Creates a list of Candidates
         if row[2] not in candidates:
-            candidates.append(row[2])    
-
-    #OUTSIDE LOOP, create candidate dictionary
+            
+            candidates.append(row[2]) 
+            candidate_dictionary[row[2]] = 0
+            
+        candidate_dictionary[row[2]] = candidate_dictionary[row[2]] + 1
     
-     
+    for candidate in candidate_dictionary:    
+        
+        percentage = round(((candidate_dictionary[candidate] / voters)*100),2) 
+        percentage_dictionary[candidate] = percentage
+        
     for candidate in candidates:
         
-        candidate_dictionary = {candidate : 0}
-    
-        
-        #WHY DOES THIS WORK IN THE FOR LOOP BUT NOT OUTSIDE OF IT?
-        print(candidate_dictionary)
-    
-    for row in csvreader:
-                
-            if candidate == row[2]:
-                
-                        
-        #Total number of votes won by each candidate
-        
-        #Winner of the election based on popular vote
-        
-        
+        if compare < percentage_dictionary[candidate]:
+            compare = percentage_dictionary[candidate]
+            winner = candidate
+  
+         
     #Print results
     print("Election Results")
     print("----------------------------")
-    print("Total Votes: " + str(Voters))
+    print("Total Votes: " + str(voters))
     print("---------------------------")
+    print("Candidates: ")
+    for candidate in candidates:
+        print(candidate + ": " + str(percentage_dictionary[candidate]) + "% " + str(candidate_dictionary[candidate]))
+    print("----------------------------")
+    print("Winner: " + winner )    
     
     #Total Number of Votes won by each candidate
     #Percentage of votes won by each candidate
     #Winner of the election based on popular vote
+filepath = os.path.join(".", "results.txt")
+with open(filepath,'w') as text:
+    text.write("Election Results")
+    text.write("----------------------------")
+    text.write("Total Votes: " + str(voters))
+    text.write("---------------------------")
+    text.write("Candidates: ")
+    for candidate in candidates:
+        text.write(candidate + ": " + str(percentage_dictionary[candidate]) + "% " + str(candidate_dictionary[candidate]))
+    text.write("----------------------------")    
+    text.write("Winner: " + winner )    
     
-    
-    for candidate in Candidates:
-        print(str(candidate) , str(candidatecount))
     
         
